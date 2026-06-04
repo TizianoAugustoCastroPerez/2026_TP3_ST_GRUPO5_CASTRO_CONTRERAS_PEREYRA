@@ -1,15 +1,15 @@
 // Grupo 5: Tiziano Castro, Tomás Contreras y Tomas Pereyra
 
-//Bibiliotecas:
-#include <DHT.h>
-#include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
-#include <Ticker.h>
-#include <WiFi.h>
-#include <WiFiClientSecure.h>
-#include <UniversalTelegramBot.h>
-#include <ArduinoJson.h>
+// Bibiliotecas
+#include <DHT.h> //Sensor Temperatura
+#include <Wire.h> // Pantalla
+#include <Adafruit_GFX.h> // Pantalla
+#include <Adafruit_SSD1306.h> // Pantalla
+#include <Ticker.h> // Timer
+#include <WiFi.h> // WiFi
+#include <WiFiClientSecure.h> // WiFi
+#include <UniversalTelegramBot.h> // Telegram
+#include <ArduinoJson.h> // Telegram
 
 // Tareas
 TaskHandle_t tarea1; // Va en el core 0
@@ -49,7 +49,7 @@ DHT dht(DHTPIN, DHTTYPE);
 
 // Defines Bot de Telegram, WiFi y Timer
 WiFiClientSecure client;
-#define BOTtoken "8624134445:AAHLQa7cK7h399IGNZjAuLxnIZvuHk7qqvs"
+#define BOTtoken "8624134445:AAHLQa7cK7h399IGNZjAqLxnIZvuHk7qqvs"
 #define CHAT_ID "8691812814"
 UniversalTelegramBot bot(BOTtoken, client);
 Ticker timer;
@@ -106,8 +106,11 @@ void setup() { // se usa para definir pines de leds, el serial begin y se crea l
     Serial.println("Conectando...");
   }
   Serial.println("Conexión WiFi exitosa");
-  bot.sendMessage(CHAT_ID, "El bot fue iniciado", "");
-
+  if (bot.sendMessage(CHAT_ID, "El bot fue iniciado", "")) {
+    Serial.println("Mensaje enviado");
+  } else {
+    Serial.println("Error enviando mensaje");
+  }
   // TAREA 1
   xTaskCreatePinnedToCore(
     Loop1,          // función que ejecuta la tarea
@@ -187,7 +190,7 @@ void Loop2(void * pvParameters) {
       tiempoPulso = 0;
       primerPulso = false;
       temperatura = 0;
-      umbral = 0;
+      umbral = 25;
       desfasaje = millis();
       estadoActual = P1;
       break;
